@@ -31,6 +31,11 @@ def pregunta_01():
 
 
 def pregunta_02():
+    import numpy as np
+    lista =[]
+    lista=tbl0.shape
+    col=int(lista[1])
+    print(col)
     """
     ¿Cuál es la cantidad de columnas en la tabla `tbl0.tsv`?
 
@@ -38,10 +43,12 @@ def pregunta_02():
     4
 
     """
-    return
+    return col
 
 
 def pregunta_03():
+    numRegister=tbl0.groupby("_c1")["_c0"].count()
+    print(numRegister)
     """
     ¿Cuál es la cantidad de registros por cada letra de la columna _c1 del archivo
     `tbl0.tsv`?
@@ -55,10 +62,13 @@ def pregunta_03():
     Name: _c1, dtype: int64
 
     """
-    return
+    return numRegister
 
 
-def pregunta_04():
+def pregunta_04():    
+    pom_letras=tbl0.groupby("_c1")["_c2"].mean()
+    print(pom_letras)    
+    
     """
     Calcule el promedio de _c2 por cada letra de la _c1 del archivo `tbl0.tsv`.
 
@@ -70,10 +80,13 @@ def pregunta_04():
     E    4.785714
     Name: _c2, dtype: float64
     """
-    return
+    return pom_letras
 
 
 def pregunta_05():
+    max_letras=tbl0.groupby("_c1")["_c2"].max()
+    print(max_letras)
+    
     """
     Calcule el valor máximo de _c2 por cada letra en la columna _c1 del archivo
     `tbl0.tsv`.
@@ -87,10 +100,18 @@ def pregunta_05():
     E    9
     Name: _c2, dtype: int64
     """
-    return
+    return max_letras
 
 
 def pregunta_06():
+    regUnicos= tbl1["_c4"].unique().tolist()
+    print(regUnicos)
+    registros=[x.upper() for x  in regUnicos]
+    registros=sorted(registros)
+    print(sorted(registros))
+    
+    
+    
     """
     Retorne una lista con los valores unicos de la columna _c4 de del archivo `tbl1.csv`
     en mayusculas y ordenados alfabéticamente.
@@ -99,10 +120,13 @@ def pregunta_06():
     ['A', 'B', 'C', 'D', 'E', 'F', 'G']
 
     """
-    return
+    return registros
 
 
 def pregunta_07():
+    sum_letras=tbl0.groupby("_c1")["_c2"].sum()
+    print(sum_letras)
+    
     """
     Calcule la suma de la _c2 por cada letra de la _c1 del archivo `tbl0.tsv`.
 
@@ -115,10 +139,13 @@ def pregunta_07():
     E    67
     Name: _c2, dtype: int64
     """
-    return
+    return sum_letras
 
 
 def pregunta_08():
+    tblResp=tbl0.copy()
+    tblResp["suma"]= tblResp["_c0"]+tblResp["_c2"]
+    print(tblResp)
     """
     Agregue una columna llamada `suma` con la suma de _c0 y _c2 al archivo `tbl0.tsv`.
 
@@ -133,10 +160,13 @@ def pregunta_08():
     39   39   E    5  1998-01-26    44
 
     """
-    return
+    return tblResp
 
 
 def pregunta_09():
+    tblResp=tbl0.copy()
+    tblResp["year"]= [x[:4] for x in tblResp["_c3"]]
+    print(tblResp)
     """
     Agregue el año como una columna al archivo `tbl0.tsv`.
 
@@ -151,10 +181,39 @@ def pregunta_09():
     39   39   E    5  1998-01-26  1998
 
     """
-    return
+    return tblResp
 
 
 def pregunta_10():
+    
+    
+    DT0 =  tbl0.copy().sort_values(by="_c2")
+    DT0["lista"] = DT0["_c2"].astype(str)
+    DT0 = DT0.drop(["_c0","_c2","_c3"], axis=1).rename(columns={"_c1":"_c0"})
+
+    #letras=pd.DataFrame()
+    #letras.append(nueva_fila, ignore_index=True)
+    letras = DT0[["_c0"]]
+    letras = letras["_c0"].astype(str).sort_values().drop_duplicates()
+
+    numeros = []
+    for i in letras:
+        y = DT0[DT0["_c0"] == i] #todos los resultados donde aparezca la i
+        z = y["lista"].values.tolist()       
+        z = ':'.join(z)
+        #z=z.sort_values
+    
+        numeros.append(z)
+
+    letras = letras.values.tolist()
+
+    print(letras)
+    print("")
+    print(numeros)
+    DT0 = pd.DataFrame({' ':letras,'_c1':numeros})
+    nueva_fila={"_c0": " " ,"_c1":""}
+    
+    
     """
     Construya una tabla que contenga _c1 y una lista separada por ':' de los valores de
     la columna _c2 para el archivo `tbl0.tsv`.
@@ -168,10 +227,31 @@ def pregunta_10():
     3   D                  1:2:3:5:5:7
     4   E  1:1:2:3:3:4:5:5:5:6:7:8:8:9
     """
-    return
+    return nueva_fila
 
 
 def pregunta_11():
+    DT1 = tbl1.copy().sort_values(by="_c4")
+    DT1["lista"] = DT1["_c4"].astype(str)
+    DT1 = DT1.drop("_c4", axis=1)
+
+
+    numeros = DT1[["_c0"]]
+    numeros = numeros["_c0"].sort_values().drop_duplicates()
+
+    letras = []
+    for i in numeros:
+        y = DT1[DT1["_c0"] == i]
+        z = y["lista"].tolist()
+        z = ','.join(z)
+    
+        letras.append(z)
+
+    letras
+
+    numeros = numeros.values.tolist()
+    DT1 = pd.DataFrame({'_c0':numeros,'_c4':letras})
+    print(DT1)
     """
     Construya una tabla que contenga _c0 y una lista separada por ',' de los valores de
     la columna _c4 del archivo `tbl1.tsv`.
@@ -187,10 +267,33 @@ def pregunta_11():
     38   38      d,e
     39   39    a,d,f
     """
-    return
+    return DT1
 
 
 def pregunta_12():
+    DT2 = tbl2.copy()
+    DT2["_c5b"] =DT2["_c5b"].astype(str)
+    DT2["lista"] = (DT2["_c5a"] + ":" + DT2["_c5b"]).astype(str)
+    DT2 = DT2.sort_values(by="_c5a")
+    DT2 = DT2.drop(["_c5a","_c5b"], axis=1)
+
+    numeros = DT2[["_c0"]]
+    numeros = numeros["_c0"].sort_values().drop_duplicates()
+
+    letras = []
+    for i in numeros:
+        y = DT2[DT2["_c0"] == i]
+        z = y["lista"].tolist()
+        z = ','.join(z)
+        
+        letras.append(z)
+
+    letras
+
+    numeros = numeros.values.tolist()
+    DT2 = pd.DataFrame({'_c0':numeros,'_c5':letras})
+    print(DT2)    
+    
     """
     Construya una tabla que contenga _c0 y una lista separada por ',' de los valores de
     la columna _c5a y _c5b (unidos por ':') de la tabla `tbl2.tsv`.
@@ -205,10 +308,13 @@ def pregunta_12():
     38   38                    eee:0,fff:9,iii:2
     39   39                    ggg:3,hhh:8,jjj:5
     """
-    return
+    return DT2
 
 
 def pregunta_13():
+    Data2_0 = pd.merge(tbl2,tbl0)
+    suma_c5b = Data2_0.groupby("_c1")["_c5b"].sum()
+    print(suma_c5b)
     """
     Si la columna _c0 es la clave en los archivos `tbl0.tsv` y `tbl2.tsv`, compute la
     suma de tbl2._c5b por cada valor en tbl0._c1.
@@ -222,4 +328,4 @@ def pregunta_13():
     E    275
     Name: _c5b, dtype: int64
     """
-    return
+    return suma_c5b
