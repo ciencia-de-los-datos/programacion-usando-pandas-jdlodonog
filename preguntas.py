@@ -212,6 +212,7 @@ def pregunta_10():
     print(numeros)
     #DT0 = pd.DataFrame({' ':letras,'_c1':numeros})
     nueva_fila={"_c0": " " ,"_c1":""}
+    print(nueva_fila)
     
     
     """
