@@ -210,7 +210,7 @@ def pregunta_10():
     print(letras)
     print("")
     print(numeros)
-    DT0 = pd.DataFrame({' ':letras,'_c1':numeros})
+    #DT0 = pd.DataFrame({' ':letras,'_c1':numeros})
     nueva_fila={"_c0": " " ,"_c1":""}
     
     
