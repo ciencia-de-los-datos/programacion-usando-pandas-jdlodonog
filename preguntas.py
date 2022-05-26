@@ -185,40 +185,9 @@ def pregunta_09():
 
 
 def pregunta_10():
-    
-    
-    DT0 =  tbl0.copy().sort_values(by="_c2")
-    DT0["lista"] = DT0["_c2"].astype(str)
-    DT0 = DT0.drop(["_c0","_c2","_c3"], axis=1).rename(columns={"_c1":"_c0"})
-
-    #letras=pd.DataFrame()
-    #letras.append(nueva_fila, ignore_index=True)
-    letras = DT0[["_c0"]]
-    letras = letras["_c0"].astype(str).sort_values().drop_duplicates()
-
-    numeros = []
-    for i in letras:
-        y = DT0[DT0["_c0"] == i] #todos los resultados donde aparezca la i
-        z = y["lista"].values.tolist()       
-        z = ':'.join(z)
-        #z=z.sort_values
-    
-        numeros.append(z)
-
-    letras = letras.values.tolist()
-
-    print(letras)
-    print("")
-    print(numeros)
-    #DT0 = pd.DataFrame({' ':letras,'_c1':numeros})
-    nueva_fila={"_c0": " " ,"_c1":""}
-    print(nueva_fila)
-    
-    
     """
     Construya una tabla que contenga _c1 y una lista separada por ':' de los valores de
     la columna _c2 para el archivo `tbl0.tsv`.
-
     Rta/
                                    _c1
       _c0
@@ -228,7 +197,11 @@ def pregunta_10():
     3   D                  1:2:3:5:5:7
     4   E  1:1:2:3:3:4:5:5:5:6:7:8:8:9
     """
-    return nueva_fila
+    DT0 = tbl0[['_c1','_c2']] 
+    DT0['_c2'] = DT0['_c2'].apply(lambda x: str(x))
+    DT0 = DT0.sort_values(['_c2'], ascending=True).groupby(['_c1'], as_index=True).agg({'_c2':':'.join})
+
+    return DT0
 
 
 def pregunta_11():
